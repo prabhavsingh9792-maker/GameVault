@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GameVault — Discover Games</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+font-family:Arial,sans-serif;
+background:#07080c;
+color:#fff;
+}
+
+header{
+position:sticky;
+top:0;
+z-index:10;
+background:#0b0c11ee;
+backdrop-filter:blur(12px);
+border-bottom:1px solid #20232d;
+}
+
+.nav{
+max-width:1150px;
+margin:auto;
+padding:17px 20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:25px;
+font-weight:900;
+}
+
+.logo span{color:#795cff}
+
+nav a{
+color:#aaa;
+text-decoration:none;
+margin-left:20px;
+font-size:14px;
+}
+
+.hero{
+max-width:1150px;
+margin:auto;
+padding:70px 20px 40px;
+}
+
+.hero h1{
+font-size:clamp(42px,8vw,78px);
+line-height:.95;
+}
+
+.hero h1 span{color:#795cff}
+
+.hero p{
+color:#9295a0;
+max-width:620px;
+line-height:1.6;
+margin:22px 0;
+}
+
+.search{
+display:flex;
+max-width:650px;
+background:#12141b;
+border:1px solid #292d39;
+border-radius:14px;
+overflow:hidden;
+}
+
+.search input{
+flex:1;
+padding:17px;
+background:none;
+border:0;
+outline:0;
+color:white;
+font-size:15px;
+}
+
+.search button{
+background:#795cff;
+border:0;
+color:white;
+font-weight:bold;
+padding:0 22px;
+}
+
+.container{
+max-width:1150px;
+margin:auto;
+padding:20px;
+}
+
+.title{
+margin:25px 0 18px;
+font-size:25px;
+}
+
+.filters{
+display:flex;
+gap:9px;
+overflow-x:auto;
+padding-bottom:15px;
+}
+
+.filter{
+white-space:nowrap;
+background:#12141b;
+border:1px solid #292d39;
+color:#aaa;
+padding:9px 15px;
+border-radius:50px;
+cursor:pointer;
+}
+
+.filter.active{
+background:#795cff;
+border-color:#795cff;
+color:#fff;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:17px;
+}
+
+.card{
+background:#11131a;
+border:1px solid #20232d;
+border-radius:15px;
+overflow:hidden;
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+border-color:#795cff;
+}
+
+.cover{
+width:100%;
+height:125px;
+object-fit:cover;
+display:block;
+background:#171923;
+}
+
+.info{
+padding:14px;
+}
+
+.info h3{
+font-size:17px;
+margin-bottom:7px;
+}
+
+.meta{
+font-size:12px;
+color:#888;
+margin-bottom:10px;
+}
+
+.rating{
+color:#ffd45a;
+font-size:13px;
+}
+
+.btn{
+display:block;
+text-align:center;
+background:#795cff;
+color:white;
+text-decoration:none;
+padding:9px;
+border-radius:8px;
+font-size:12px;
+font-weight:bold;
+margin-top:12px;
+}
+
+.empty{
+display:none;
+text-align:center;
+padding:50px;
+color:#777;
+}
+
+/* CAT MEMES */
+
+.meme-section{
+margin-top:65px;
+}
+
+.meme-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+}
+
+.meme{
+position:relative;
+height:270px;
+border-radius:16px;
+overflow:hidden;
+background:#111;
+border:1px solid #252832;
+}
+
+.meme img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.meme-text{
+position:absolute;
+left:0;
+right:0;
+bottom:0;
+padding:35px 14px 15px;
+font-size:20px;
+font-weight:900;
+text-align:center;
+text-shadow:2px 2px 5px #000;
+background:linear-gradient(transparent,#000);
+}
+
+footer{
+margin-top:70px;
+border-top:1px solid #20232d;
+padding:35px 20px;
+text-align:center;
+color:#666;
+}
+
+@media(max-width:600px){
+nav{display:none}
+.hero{padding-top:50px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="nav">
+
+<div class="logo">
+GAME<span>VAULT</span>
+</div>
+
+<nav>
+<a href="#games">Games</a>
+<a href="#memes">Memes</a>
+</nav>
+
+</div>
+</header>
+
+
+<section class="hero">
+
+<h1>
+FIND YOUR<br>
+<span>NEXT GAME.</span>
+</h1>
+
+<p>
+Discover popular games, hidden gems, multiplayer titles
+and free-to-play games — all in one place.
+</p>
+
+<div class="search">
+<input id="search" placeholder="Search 50+ games...">
+<button onclick="searchGames()">Search</button>
+</div>
+
+</section>
+
+
+<main class="container">
+
+<h2 class="title" id="games">🎮 Game Library</h2>
+
+<div class="filters">
+
+<button class="filter active" onclick="filter('all',this)">All</button>
+<button class="filter" onclick="filter('action',this)">Action</button>
+<button class="filter" onclick="filter('rpg',this)">RPG</button>
+<button class="filter" onclick="filter('indie',this)">Indie</button>
+<button class="filter" onclick="filter('multiplayer',this)">Multiplayer</button>
+<button class="filter" onclick="filter('free',this)">Free</button>
+
+</div>
+
+<div class="grid" id="gamesGrid"></div>
+
+<div class="empty" id="empty">
+😭 No games found.
+</div>
+
+
+<section class="meme-section" id="memes">
+
+<h2 class="title">🐱 Cat Gaming Memes</h2>
+
+<div class="meme-grid">
+
+<div class="meme">
+<img src="https://cataas.com/cat/says/ONE%20MORE%20GAME?fontSize=40&fontColor=white">
+<div class="meme-text">"ONE MORE GAME"</div>
+</div>
+
+<div class="meme">
+<img src="https://cataas.com/cat/says/I%20CAN%20FIX%20MY%20RANK?fontSize=35&fontColor=white">
+<div class="meme-text">Me after losing 7 games</div>
+</div>
+
+<div class="meme">
+<img src="https://cataas.com/cat/says/WHERE%20IS%20MY%20LOOT?fontSize=35&fontColor=white">
+<div class="meme-text">WHERE IS MY LOOT 😭</div>
+</div>
+
+<div class="meme">
+<img src="https://cataas.com/cat/says/NO%20SLEEP?fontSize=40&fontColor=white">
+<div class="meme-text">School tomorrow: 💀</div>
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+© 2026 GameVault • Discover. Play. Repeat. 🐱
+</footer>
+
+
+<script>
+
+/*
+==================================================
+GAME DATABASE
+==================================================
+You can add games by copying one object.
+*/
+
+const games = [
+
+["Counter-Strike 2",730,"Action • Multiplayer • Free",4.8,"action multiplayer free"],
+["Dota 2",570,"MOBA • Multiplayer • Free",4.7,"multiplayer free"],
+["Team Fortress 2",440,"FPS • Multiplayer • Free",4.6,"action multiplayer free"],
+["PUBG: Battlegrounds",578080,"Battle Royale • Free",4.5,"action multiplayer free"],
+["Rust",252490,"Survival • Multiplayer",4.6,"action multiplayer"],
+["Grand Theft Auto V",271590,"Action • Open World",4.8,"action multiplayer"],
+["The Witcher 3",292030,"RPG • Open World",4.9,"rpg action"],
+["Cyberpunk 2077",1091500,"RPG • Open World",4.7,"rpg action"],
+["Elden Ring",1245620,"RPG • Action",4.9,"rpg action"],
+["Red Dead Redemption 2",1174180,"Action • Open World",4.9,"action"],
+["God of War",1593500,"Action • Adventure",4.8,"action"],
+["Stardew Valley",413150,"Indie • Farming RPG",4.9,"indie rpg"],
+["Hollow Knight",367520,"Indie • Metroidvania",4.9,"indie action"],
+["Terraria",105600,"Indie • Sandbox",4.9,"indie multiplayer"],
+["Don't Starve Together",322330,"Survival • Multiplayer",4.7,"indie multiplayer"],
+["Unturned",304930,"Survival • Multiplayer • Free",4.5,"indie multiplayer free"],
+["Brawlhalla",291550,"Fighting • Multiplayer • Free",4.7,"action multiplayer free"],
+["Warframe",230410,"Action • Multiplayer • Free",4.8,"action multiplayer free"],
+["Rainbow Six Siege",359550,"FPS • Multiplayer",4.6,"action multiplayer"],
+["Apex Legends",1172470,"Battle Royale • Free",4.6,"action multiplayer free"],
+["Destiny 2",1085660,"FPS • Multiplayer • Free",4.6,"action multiplayer free"],
+["Sea of Thieves",1172620,"Adventure • Multiplayer",4.7,"action multiplayer"],
+["Fall Guys",1097150,"Party • Multiplayer • Free",4.4,"multiplayer free"],
+["Path of Exile",238960,"Action RPG • Free",4.7,"rpg action free"],
+["War Thunder",236390,"Combat • Multiplayer • Free",4.5,"action multiplayer free"],
+["Genshin Impact",,"RPG • Open World",4.7,"rpg action"],
+["PAYDAY 2",218620,"Action • Co-op",4.7,"action multiplayer"],
+["Left 4 Dead 2",550,"FPS • Co-op",4.8,"action multiplayer"],
+["Portal 2",620,"Puzzle • Co-op",4.9,"indie multiplayer"],
+["Euro Truck Simulator 2",227300,"Simulation • Driving",4.8,"indie"],
+["Hades",1145360,"Roguelike • Action",4.9,"indie action"],
+["Dead Cells",588650,"Indie • Action",4.8,"indie action"],
+["Celeste",504230,"Indie • Platformer",4.9,"indie"],
+["Cuphead",268910,"Indie • Action",4.8,"indie action"],
+["Among Us",945360,"Party • Multiplayer",4.5,"indie multiplayer"],
+["Phasmophobia",739630,"Horror • Multiplayer",4.7,"action multiplayer"],
+["Lethal Company",1966720,"Horror • Co-op",4.8,"indie multiplayer"],
+["Content Warning",2881650,"Horror • Multiplayer",4.5,"indie multiplayer"],
+["Palworld",1623730,"Survival • RPG",4.4,"rpg multiplayer"],
+["ARK: Survival Evolved",346110,"Survival • Multiplayer",4.5,"action multiplayer"],
+["Subnautica",264710,"Survival • Adventure",4.9,"action"],
+["No Man's Sky",275850,"Adventure • Survival",4.6,"action multiplayer"],
+["Valheim",892970,"Survival • Co-op",4.8,"indie multiplayer"],
+["Satisfactory",526870,"Building • Simulation",4.9,"indie"],
+["Deep Rock Galactic",548430,"FPS • Co-op",4.8,"action multiplayer"],
+["Risk of Rain 2",632360,"Roguelike • Action",4.8,"indie action"],
+["Vampire Survivors",1794680,"Indie • Roguelike",4.8,"indie"],
+["Geometry Dash",322170,"Indie • Rhythm",4.7,"indie"],
+["Among the Sleep",250620,"Horror • Adventure",4.2,"indie"],
+["Sonic Mania",584400,"Platformer • Action",4.7,"action"],
+["The Forest",242760,"Survival • Horror",4.7,"action multiplayer"]
+
+];
+
+
+/*
+==================================================
+CREATE GAME CARDS
+==================================================
+*/
+
+const grid = document.getElementById("gamesGrid");
+
+function createGames(list){
+
+grid.innerHTML="";
+
+list.forEach(game=>{
+
+const name=game[0];
+const id=game[1];
+const description=game[2];
+const rating=game[3];
+const categories=game[4];
+
+let image = id
+? `https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/header.jpg`
+: `https://placehold.co/600x338/171923/ffffff?text=${encodeURIComponent(name)}`;
+
+const card=document.createElement("article");
+
+card.className="card";
+
+card.dataset.name=name.toLowerCase();
+card.dataset.category=categories;
+
+card.innerHTML=`
+
+<img class="cover"
+src="${image}"
+alt="${name}"
+loading="lazy"
+onerror="this.src='https://placehold.co/600x338/171923/ffffff?text=Game'">
+
+<div class="info">
+
+<h3>${name}</h3>
+
+<div class="meta">
+${description}
+</div>
+
+<div class="rating">
+★★★★★ ${rating}
+</div>
+
+<a
+class="btn"
+href="https://store.steampowered.com/search/?term=${encodeURIComponent(name)}"
+target="_blank">
+VIEW GAME
+</a>
+
+</div>
+`;
+
+grid.appendChild(card);
+
+});
+
+}
+
+createGames(games);
+
+
+/*
+==================================================
+FILTER
+==================================================
+*/
+
+function filter(category,button){
+
+document
+.querySelectorAll(".filter")
+.forEach(x=>x.classList.remove("active"));
+
+button.classList.add("active");
+
+const cards=document.querySelectorAll(".card");
+
+let found=0;
+
+cards.forEach(card=>{
+
+if(
+category==="all" ||
+card.dataset.category.includes(category)
+){
+
+card.style.display="block";
+found++;
+
+}else{
+
+card.style.display="none";
+
+}
+
+});
+
+document.getElementById("empty").style.display=
+found ? "none":"block";
+
+}
+
+
+/*
+==================================================
+SEARCH
+==================================================
+*/
+
+function searchGames(){
+
+const query=
+document
+.getElementById("search")
+.value
+.toLowerCase()
+.trim();
+
+const cards=document.querySelectorAll(".card");
+
+let found=0;
+
+cards.forEach(card=>{
+
+if(card.dataset.name.includes(query)){
+
+card.style.display="block";
+found++;
+
+}else{
+
+card.style.display="none";
+
+}
+
+});
+
+document.getElementById("empty").style.display=
+found ? "none":"block";
+
+}
+
+
+document
+.getElementById("search")
+.addEventListener("keyup",e=>{
+
+if(e.key==="Enter"){
+searchGames();
+}
+
+});
+
+</script>
+
+</body>
+</html>
